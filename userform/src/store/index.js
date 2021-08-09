@@ -12,7 +12,6 @@ export default new Vuex.Store({
       for( const i of Object.keys(payload)){
         state.answer[i] = payload[i];
       }
-      console.log(state.answer);
     }
   },
   actions: {

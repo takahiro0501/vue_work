@@ -9,10 +9,10 @@
         <div class="question1" @click="showQuestion('question2')">
           <p>現在、生命保険に加入されていますか？</p>
           <label>
-            <input type="radio" value="yes" v-model="answer.answer1" />はい
+            <input type="radio" value="はい" v-model="answer.answer1" />はい
           </label>
           <label>
-            <input type="radio" value="no" v-model="answer.answer1" />いいえ
+            <input type="radio" value="いいえ" v-model="answer.answer1" />いいえ
           </label>
         </div>
 
@@ -21,10 +21,10 @@
             現在入院中ですか。または、最近３ヶ月以内に医師の診察・検査の結果、入院・手術をすすめられたことはありますか？
           </p>
           <label>
-            <input type="radio" value="yes" v-model="answer.answer2" />はい
+            <input type="radio" value="はい" v-model="answer.answer2" />はい
           </label>
           <label>
-            <input type="radio" value="no" v-model="answer.answer2" />いいえ
+            <input type="radio" value="いいえ" v-model="answer.answer2" />いいえ
           </label>
         </div>
 
@@ -33,10 +33,10 @@
             過去５年以内に、病気やけがで、手術をうけたことまたは継続して７日以上の入院をしたことがありますか？
           </p>
           <label>
-            <input type="radio" value="yes" v-model="answer.answer3" />はい
+            <input type="radio" value="はい" v-model="answer.answer3" />はい
           </label>
           <label>
-            <input type="radio" value="no" v-model="answer.answer3" />いいえ
+            <input type="radio" value="いいえ" v-model="answer.answer3" />いいえ
           </label>
         </div>
       </div>
