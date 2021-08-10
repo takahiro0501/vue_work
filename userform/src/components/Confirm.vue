@@ -47,7 +47,7 @@ export default {
     }
   },
   created: function () {
-      this.answer = this.$store.state.answer ;
+      this.answer = this.$store.getters.getAnswer ;
   }
 }
 

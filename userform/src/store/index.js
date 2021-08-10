@@ -14,6 +14,11 @@ export default new Vuex.Store({
       }
     }
   },
+  getters: {
+    getAnswer: state => {
+      return state.answer
+    }
+  },
   actions: {
   },
   modules: {
