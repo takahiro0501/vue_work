@@ -7,8 +7,8 @@
 
       <div class="question">
         <p>-性別-</p>
-        <label><input type="radio" value="male" v-model="answer.sex" />男性</label>
-        <label><input type="radio" value="female" v-model="answer.sex" />女性</label>
+        <label><input type="radio" value="男性" v-model="answer.sex" />男性</label>
+        <label><input type="radio" value="女性" v-model="answer.sex" />女性</label>
 
         <p>-生年月日-</p>
         <select v-model="answer.year" @change="getDays">
