@@ -13,7 +13,7 @@
 
     <p>
       <router-link to="/Step2" tag="button">戻る</router-link>
-      <router-link to="/" tag="button" @click.native="doConfirm">次へ進む</router-link>
+      <router-link to="/Confirm" tag="button" @click.native="doUpdate">次へ進む</router-link>
     </p>
   </div>
 </template>
@@ -27,10 +27,10 @@ export default {
     };
   },
   methods: {
-    doConfirm: function () {
+    doUpdate: function () {
       this.$store.commit("setAnswer", this.answer);
-    },
-  },
+    }
+  }
 };
 </script>
 
