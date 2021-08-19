@@ -7,15 +7,15 @@
         <th>状態</th>
         <th></th>
       </tr>
-      <tr v-for="(value, index) in todos" :key="index">
+      <tr v-for="(todo, index) in todos" :key="index">
         <td>
-          {{ value.id }}
+          {{ todo.id }}
         </td>
         <td>
-          {{ value.comment }}
+          {{ todo.comment }}
         </td>
         <td>
-          <button @click="$emit('change', index)">{{ value.state }}</button>
+          <button @click="$emit('change', index)">{{ todo.state }}</button>
         </td>
         <td>
           <button @click="$emit('remove', index)">削除</button>

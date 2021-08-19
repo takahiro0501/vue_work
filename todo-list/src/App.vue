@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     //新規タスクの追加
-    addTask: function () {
+    addTask() {
       this.todos.push({
         comment: this.task,
         state: "作業中",
@@ -44,14 +44,14 @@ export default {
       this.task = "";
     },
     //タスクの削除、IDの降り直し
-    removeTask: function (index) {
-      this.todos.splice(index, 1);
-      for (let i = index; i < this.todos.length; i++) {
-        this.todos[i].id = i;
-      }
+    removeTask(index) {
+      this.todos.splice(index, 1);  
+      this.todos.forEach((todo,index) => {
+        todo.id = index;
+      });
     },
     //タスク状態の変更
-    changeState: function (index) {
+    changeState(index) {
       this.todos[index].state == "作業中"
         ? (this.todos[index].state = "完了")
         : (this.todos[index].state = "作業中");
@@ -60,15 +60,13 @@ export default {
   computed: {
     //ラジオボタン（すべて、作業中、完了）選択時の動作
     filterTodos() {
-      let array = [];
       if (this.state == "all") {
-        array = this.todos;
+        return this.todos;
       } else if (this.state == "active") {
-        array = this.todos.filter((todo) => todo.state == "作業中");
-      } else if (this.state == "completed") {
-        array = this.todos.filter((todo) => todo.state == "完了");
+        return this.todos.filter((todo) => todo.state == "作業中");
+      } else {
+        return this.todos.filter((todo) => todo.state == "完了");
       }
-      return array;
     },
   },
 };
