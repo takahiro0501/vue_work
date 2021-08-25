@@ -11,8 +11,6 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-
 export default {
   name: 'Dashboard',
   data(){
@@ -22,16 +20,15 @@ export default {
     }
   },
   created(){
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.displayName = user.displayName;
-      } else {
-        alert("ユーザ情報取得エラー");
+    this.$store.dispatch('getAuthState')
+      .then((displayName) => { 
+        this.displayName = displayName;
+      }).catch(() => {
         this.$router.push('/');
-      }
-    });
+      });
   }
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -36,11 +36,11 @@ export default {
             .then(() => {
               this.$router.push('/Dashboard');
             }).catch((error) => {
-              alert('エラーメッセージ： ' + error.message);
+              console.log('エラーメッセージ： ' + error.message);
             })
         })
         .catch((error) =>{
-          alert('エラーメッセージ： ' + error.message);
+          console.log('エラーメッセージ： ' + error.message);
         })
     }
   }
