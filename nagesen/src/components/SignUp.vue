@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-
 export default {
   name: 'SignUp',
   data() {
@@ -30,18 +28,7 @@ export default {
   },
   methods: {
     signUp() {
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-        .then((user) => {
-          user.user.updateProfile({ displayName: this.username })
-            .then(() => {
-              this.$router.push('/Dashboard');
-            }).catch((error) => {
-              console.log('エラーメッセージ： ' + error.message);
-            })
-        })
-        .catch((error) =>{
-          console.log('エラーメッセージ： ' + error.message);
-        })
+      this.$store.dispatch('createUser', { email: this.email, password: this.password ,username: this.username});
     }
   }
 }
