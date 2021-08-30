@@ -1,14 +1,13 @@
 <template>
-  <div class="SignUp">
-    <h1>新規登録画面</h1>
+  <div class="SignIn">
+    <h1>ログイン画面</h1>
     <ul>
-      <li><label>ユーザ名</label><input v-model="username" placeholder="UserName"></li>
       <li><label>メールアドレス</label><input v-model="email" placeholder="E-mail"></li>
       <li><label>パスワード</label><input v-model="password" placeholder="Password"></li>
     </ul>
 
-    <div class="registBox"><a class="registBtn" @click="signUp">新規登録</a></div>
-    <div><router-link to="/SignIn" class="loginBtn">ログインはこちらから</router-link></div>
+    <div class="registBox"><a class="registBtn" @click="signIn">ログイン</a></div>
+    <div><router-link to="/" class="loginBtn">新規登録はこちらから</router-link></div>
     
     <footer>
       Copyright &copy; 2019 ○○ Inc. All rights reserved.
@@ -18,17 +17,16 @@
 
 <script>
 export default {
-  name: 'SignUp',
+  name: 'SignIn',
   data() {
     return {
-      username:'',
       email:'',
-      password:'',
+      password:''
     }
   },
   methods: {
-    signUp() {
-      this.$store.dispatch('createUser', { email: this.email, password: this.password ,username: this.username});
+    signIn() {
+      this.$store.dispatch('signInUser', { email: this.email, password: this.password});
     }
   }
 }
