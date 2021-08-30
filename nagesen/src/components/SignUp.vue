@@ -8,7 +8,7 @@
     </ul>
 
     <div class="registBox"><a class="registBtn" @click="signUp">新規登録</a></div>
-    <div><router-link to="/SignIn" class="loginBtn">ログインはこちらから</router-link></div>
+    <div><router-link to="/" class="loginBtn">ログインはこちらから(課題4－2で対応のため未実装)</router-link></div>
     
     <footer>
       Copyright &copy; 2019 ○○ Inc. All rights reserved.
