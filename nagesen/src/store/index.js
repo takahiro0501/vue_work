@@ -11,6 +11,7 @@ export default new Vuex.Store({
   mutations: {
   },
   actions: {
+    //ユーザ登録
     createUser(state,{email,password,username}){
       firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((user) => {
@@ -25,11 +26,22 @@ export default new Vuex.Store({
           console.log('ユーザ登録エラー： ' + error.message);
        })
     },
+    //ログインユーザ取得
     getAuthState(){
       return new Promise((resolve) => {
         firebase.auth().onAuthStateChanged((user) => {
           resolve(user.displayName);
         })
+      });
+    },
+    //ユーザログイン
+    signInUser(state,{email,password}){
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          router.push('/Dashboard');
+        })
+        .catch((error) => {
+          console.log('ユーザログインエラー： ' + error.message);
       });
     }
   },
