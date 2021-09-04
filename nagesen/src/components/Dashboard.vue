@@ -20,13 +20,15 @@ export default {
     }
   },
   created(){
+    //ログインユーザ情報（表示名と所持金）を表示する
     this.$store.dispatch('getAuthState')
-      .then((displayName) => { 
-        this.displayName = displayName;
+      .then(() => {
+        this.displayName = this.$store.getters.displayName;
+        this.remaining = this.$store.getters.money;
       }).catch(() => {
         this.$router.push('/');
       });
-  }
+  },
 }
 
 </script>
