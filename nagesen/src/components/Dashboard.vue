@@ -1,8 +1,8 @@
 <template>
   <div class="Dashboard">
     <div class="header">
-      <div>{{displayName}}さん、ようこそ！！</div>
-      <div>残高：{{remaining}} <a class="logoutBtn">ログアウト</a></div>
+      <div >{{displayName}}さん、ようこそ！！</div>
+      <div >残高：{{remaining}} <a class="logoutBtn" @click="signOut">ログアウト</a></div>
     </div>
 
     <h1>ユーザ一覧</h1>
@@ -16,7 +16,7 @@ export default {
   data(){
     return {
       displayName: '',
-      remaining: '-'
+      remaining: ''
     }
   },
   created(){
@@ -29,6 +29,11 @@ export default {
         this.$router.push('/');
       });
   },
+  methods: {
+    signOut() {
+      this.$store.dispatch('signOutUser');
+    }
+  }
 }
 
 </script>

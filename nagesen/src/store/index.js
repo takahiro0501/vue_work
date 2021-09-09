@@ -54,17 +54,21 @@ export default new Vuex.Store({
       return new Promise((resolve) => {
         //ログインユーザ情報取得
         firebase.auth().onAuthStateChanged((user) => {
-          this.state.loginUser.displayName = user.displayName;
-          //ログインユーザemailからＤＢ検索
-          firebase.firestore().collection('wallet').where('email','==',user.email).get()
-            .then(snapshot => {
-              console.log('データ取得件数:' + snapshot.size);
-              //ログインユーザの所持金取得
-              snapshot.forEach((postDoc) => {
-                this.state.loginUser.money = postDoc.data().money;
+          if(user){
+            this.state.loginUser.displayName = user.displayName;
+            //ログインユーザemailからＤＢ検索
+            firebase.firestore().collection('wallet').where('email','==',user.email).get()
+              .then(snapshot => {
+                console.log('データ取得件数:' + snapshot.size);
+                //ログインユーザの所持金取得
+                snapshot.forEach((postDoc) => {
+                  this.state.loginUser.money = postDoc.data().money;
+                })
+                resolve();  
               })
-              resolve();
-            })
+          } else {
+            router.push('/SignIn').catch(() => {});
+          }
         })
       });
     },
@@ -78,6 +82,16 @@ export default new Vuex.Store({
           console.log('ユーザログインエラー： ' + error.message);
       });
     },
+    //ダッシュボード画面でのログアウト処理
+    signOutUser(){
+      firebase.auth().signOut()
+        .then(() => {
+          console.log("ログアウト成功");
+        })
+        .catch((error) => {
+          console.log('ログアウトエラー：　'　+ error.message);
+        })
+    }
   },
   modules: {
   }

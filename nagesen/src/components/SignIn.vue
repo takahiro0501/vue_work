@@ -8,7 +8,7 @@
 
     <div class="registBox"><a class="registBtn" @click="signIn">ログイン</a></div>
     <div><router-link to="/" class="loginBtn">新規登録はこちらから</router-link></div>
-    
+
     <footer>
       Copyright &copy; 2019 ○○ Inc. All rights reserved.
     </footer>
