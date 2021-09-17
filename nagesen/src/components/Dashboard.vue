@@ -6,17 +6,36 @@
     </div>
 
     <h1>ユーザ一覧</h1>
-    <p>課題４－３で対応のため未実装</p>
+    <ul>
+      <li class="sub">ユーザ名</li>
+      <li v-for="(user,index) in registeredUser" :key="index">
+        <div class="name">{{user.displayName}}</div>
+        <div>
+          <button class="wallet" @click="openWalletModal(user)">walletを見る</button>
+          <button class="wallet">送る</button>
+        </div>
+      </li>
+    </ul>
+
+    <wallet-modal v-if="showWallet" @from-child="closeWalletModal"></wallet-modal>
+
   </div>
 </template>
 
 <script>
+import WalletModal from './WalletModal.vue'
+
 export default {
   name: 'Dashboard',
+  components:{
+    WalletModal
+  },
   data(){
     return {
       displayName: '',
-      remaining: ''
+      remaining: '',
+      registeredUser:[],
+      showWallet: false
     }
   },
   created(){
@@ -25,6 +44,10 @@ export default {
       .then(() => {
         this.displayName = this.$store.getters.displayName;
         this.remaining = this.$store.getters.money;
+        //登録ユーザの情報を表示する
+        this.$store.dispatch('getRegisteredUser');
+        this.registeredUser = this.$store.getters.registeredUser;
+
       }).catch(() => {
         this.$router.push('/');
       });
@@ -32,6 +55,13 @@ export default {
   methods: {
     signOut() {
       this.$store.dispatch('signOutUser');
+    },
+    openWalletModal(user){
+      this.showWallet = true;
+      this.$store.commit('chengeFocusUser',user);
+    },    
+    closeWalletModal(){
+      this.showWallet = false;
     }
   }
 }
@@ -42,7 +72,7 @@ export default {
 <style scoped>
 
 .Dashboard{
-  width: 1000px;
+  width: 600px;
   margin: 0 auto;
 }
 
@@ -71,4 +101,28 @@ export default {
   background-color: #0086fb;
 }
 
+ul li{
+  display: flex;
+  justify-content:space-between;
+  list-style: none;
+}
+
+.sub{
+  font-weight: bold;
+  font-size: 20px;
+  
+}
+
+.name{
+  padding-left: 15px;
+}
+
+.wallet{
+  margin: 2px 3px;
+  padding: 5px 7px;
+  background-color: #1aa1b9;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+}
 </style>

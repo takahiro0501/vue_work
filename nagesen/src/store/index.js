@@ -9,14 +9,22 @@ export default new Vuex.Store({
   state: {
     loginUser:{
       displayName:'',
-      money:''
-    }
+      money:'',
+      email:''
+    },
+    registeredUser:[],
+    focusUser:''
   },
   getters: {
     displayName(state) { return state.loginUser.displayName},
-    money(state) { return state.loginUser.money}
+    money(state) { return state.loginUser.money},
+    registeredUser(state) { return state.registeredUser},
+    focusUser(state)  { return state.focusUser}
   },
   mutations: {
+    chengeFocusUser(state,user){
+      state.focusUser = user;
+    }
   },
   actions: {
     //新規登録画面でのユーザ登録処理
@@ -56,6 +64,7 @@ export default new Vuex.Store({
         firebase.auth().onAuthStateChanged((user) => {
           if(user){
             this.state.loginUser.displayName = user.displayName;
+            this.state.loginUser.email = user.email;
             //ログインユーザemailからＤＢ検索
             firebase.firestore().collection('wallet').where('email','==',user.email).get()
               .then(snapshot => {
@@ -91,6 +100,19 @@ export default new Vuex.Store({
         .catch((error) => {
           console.log('ログアウトエラー：　'　+ error.message);
         })
+    },
+    //登録ユーザの情報を取得する
+    getRegisteredUser(){
+      //配列の初期化
+      this.state.registeredUser.splice(0,this.state.registeredUser.length);
+      //DBからログインユーザ以外の登録ユーザデータを保存
+      firebase.firestore().collection('wallet').get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            if(this.state.loginUser.email !== doc.data().email){
+              this.state.registeredUser.push(doc.data());
+            }
+        });
+      });
     }
   },
   modules: {
