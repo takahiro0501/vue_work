@@ -8,7 +8,7 @@
     <h1>ユーザ一覧</h1>
     <ul>
       <li class="sub">ユーザ名</li>
-      <li v-for="(user,index) in registeredUser" :key="index">
+      <li v-for="(user,index) in registeredUsers" :key="index">
         <div class="name">{{user.displayName}}</div>
         <div>
           <button class="wallet" @click="openWalletModal(user)">walletを見る</button>
@@ -34,7 +34,7 @@ export default {
     return {
       displayName: '',
       remaining: '',
-      registeredUser:[],
+      registeredUsers:[],
       showWallet: false
     }
   },
@@ -45,8 +45,8 @@ export default {
         this.displayName = this.$store.getters.displayName;
         this.remaining = this.$store.getters.money;
         //登録ユーザの情報を表示する
-        this.$store.dispatch('getRegisteredUser');
-        this.registeredUser = this.$store.getters.registeredUser;
+        this.$store.dispatch('getRegisteredUsers');
+        this.registeredUsers = this.$store.getters.registeredUsers;
 
       }).catch(() => {
         this.$router.push('/');

@@ -12,13 +12,13 @@ export default new Vuex.Store({
       money:'',
       email:''
     },
-    registeredUser:[],
+    registeredUsers:[],
     focusUser:''
   },
   getters: {
     displayName(state) { return state.loginUser.displayName},
     money(state) { return state.loginUser.money},
-    registeredUser(state) { return state.registeredUser},
+    registeredUsers(state) { return state.registeredUsers},
     focusUser(state)  { return state.focusUser}
   },
   mutations: {
@@ -102,14 +102,14 @@ export default new Vuex.Store({
         })
     },
     //登録ユーザの情報を取得する
-    getRegisteredUser(){
+    getRegisteredUsers(){
       //配列の初期化
-      this.state.registeredUser.splice(0,this.state.registeredUser.length);
+      this.state.registeredUsers.splice(0,this.state.registeredUsers.length);
       //DBからログインユーザ以外の登録ユーザデータを保存
       firebase.firestore().collection('wallet').get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             if(this.state.loginUser.email !== doc.data().email){
-              this.state.registeredUser.push(doc.data());
+              this.state.registeredUsers.push(doc.data());
             }
         });
       });
