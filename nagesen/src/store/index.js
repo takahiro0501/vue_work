@@ -18,12 +18,16 @@ export default new Vuex.Store({
   getters: {
     displayName(state) { return state.loginUser.displayName},
     money(state) { return state.loginUser.money},
+    email(state) { return state.loginUser.email},
     registeredUsers(state) { return state.registeredUsers},
     focusUser(state)  { return state.focusUser}
   },
   mutations: {
     chengeFocusUser(state,user){
       state.focusUser = user;
+    },
+    chengeLoginUserMoney(state,money){
+      state.loginUser.money = money;
     }
   },
   actions: {
@@ -73,7 +77,7 @@ export default new Vuex.Store({
                 snapshot.forEach((postDoc) => {
                   this.state.loginUser.money = postDoc.data().money;
                 })
-                resolve();  
+                resolve();
               })
           } else {
             router.push('/SignIn').catch(() => {});
@@ -102,18 +106,65 @@ export default new Vuex.Store({
         })
     },
     //登録ユーザの情報を取得する
-    getRegisteredUsers(){
-      //配列の初期化
-      this.state.registeredUsers.splice(0,this.state.registeredUsers.length);
-      //DBからログインユーザ以外の登録ユーザデータを保存
-      firebase.firestore().collection('wallet').get().then((querySnapshot) => {
+    async getRegisteredUsers(){
+      await firebase.firestore().collection('wallet').get().then((querySnapshot) => {
+        //配列の初期化
+        this.state.registeredUsers.splice(0,this.state.registeredUsers.length);
+        //DBから登録ユーザデータを保存
         querySnapshot.forEach((doc) => {
             if(this.state.loginUser.email !== doc.data().email){
               this.state.registeredUsers.push(doc.data());
+            } else {
+              this.state.loginUser.money = doc.data().money;
             }
         });
       });
-    }
+    },
+    //送金金額をDBに反映する
+    async updateMoney(state,sendMoney){
+
+      let sendUserID;
+      let receiveUserID;
+
+      //送金元ユーザのドキュメントID取得
+      await this.dispatch('getDocumentID', this.state.loginUser.email).then((id) => {
+        sendUserID = id;
+      })
+
+      //送金先ユーザのドキュメントID取得
+      await this.dispatch('getDocumentID', this.state.focusUser.email).then((id) => {
+        receiveUserID = id;
+      })
+
+      //金額をDBに反映する
+      const batch =  firebase.firestore().batch();
+
+      //送信元ユーザの金額変更
+      const sendRef = firebase.firestore().collection('wallet').doc(sendUserID);
+      const resultMoney = Number(this.state.loginUser.money) - Number(sendMoney)
+      this.state.loginUser.money = resultMoney;
+      batch.update(sendRef, {money: resultMoney});
+
+      //送信先ユーザの金額変更
+      const receiveRef = firebase.firestore().collection('wallet').doc(receiveUserID);
+      batch.update(receiveRef, {money: Number(this.state.focusUser.money) + Number(sendMoney)});
+
+      //一括更新
+      await batch.commit();
+
+    },
+    getDocumentID(state,email){
+      //対象のドキュメントID取得
+      return new Promise((resolve) => {
+        firebase.firestore().collection('wallet').where('email','==',email).get()
+          .then(snapshot => {
+            snapshot.forEach((postDoc) => {
+              resolve(postDoc.id);
+          })
+        })
+      })
+     }
+
   },
   modules: {
   }

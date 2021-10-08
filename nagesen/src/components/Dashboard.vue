@@ -12,30 +12,36 @@
         <div class="name">{{user.displayName}}</div>
         <div>
           <button class="wallet" @click="openWalletModal(user)">walletを見る</button>
-          <button class="wallet">送る</button>
+          <button class="wallet" @click="openSendModal(user)">送る</button>
         </div>
       </li>
     </ul>
 
     <wallet-modal v-if="showWallet" @from-child="closeWalletModal"></wallet-modal>
-
+    <send-modal v-if="sendWallet" @from-child="closeSendModal"></send-modal>
+  
   </div>
 </template>
 
 <script>
+import firebase from 'firebase'
 import WalletModal from './WalletModal.vue'
+import SendModal from './SendModal.vue'
 
 export default {
   name: 'Dashboard',
   components:{
-    WalletModal
+    WalletModal,
+    SendModal
   },
   data(){
     return {
       displayName: '',
       remaining: '',
+      email:'',
       registeredUsers:[],
-      showWallet: false
+      showWallet: false,
+      sendWallet: false
     }
   },
   created(){
@@ -44,13 +50,20 @@ export default {
       .then(() => {
         this.displayName = this.$store.getters.displayName;
         this.remaining = this.$store.getters.money;
-        //登録ユーザの情報を表示する
-        this.$store.dispatch('getRegisteredUsers');
-        this.registeredUsers = this.$store.getters.registeredUsers;
-
+        this.email = this.$store.getters.email;
       }).catch(() => {
         this.$router.push('/');
       });
+    
+    //リスナーの登録
+    firebase.firestore().collection('wallet').onSnapshot(() => {
+      //金額情報の更新
+      this.$store.dispatch('getRegisteredUsers').then(() => {
+        this.registeredUsers = this.$store.getters.registeredUsers;
+        this.remaining = this.$store.getters.money;
+      })
+    });
+
   },
   methods: {
     signOut() {
@@ -59,9 +72,21 @@ export default {
     openWalletModal(user){
       this.showWallet = true;
       this.$store.commit('chengeFocusUser',user);
-    },    
+    },
     closeWalletModal(){
       this.showWallet = false;
+    },
+    openSendModal(user){
+      this.sendWallet = true;
+      this.$store.commit('chengeFocusUser',user);
+    },
+    closeSendModal(sendMoney){
+      this.sendWallet = false;
+      if( sendMoney > 0 && sendMoney <= this.remaining){
+        this.$store.dispatch('updateMoney',sendMoney);
+      } else{
+        console.log('入力金額エラー');
+      }
     }
   }
 }
