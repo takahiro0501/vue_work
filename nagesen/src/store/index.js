@@ -123,18 +123,11 @@ export default new Vuex.Store({
     //送金金額をDBに反映する
     async updateMoney(state,sendMoney){
 
-      let sendUserID;
-      let receiveUserID;
-
       //送金元ユーザのドキュメントID取得
-      await this.dispatch('getDocumentID', this.state.loginUser.email).then((id) => {
-        sendUserID = id;
-      })
+      const sendUserID = await this.dispatch('getDocumentID', this.state.loginUser.email);
 
       //送金先ユーザのドキュメントID取得
-      await this.dispatch('getDocumentID', this.state.focusUser.email).then((id) => {
-        receiveUserID = id;
-      })
+      const receiveUserID = await this.dispatch('getDocumentID', this.state.focusUser.email);
 
       //金額をDBに反映する
       const batch =  firebase.firestore().batch();
@@ -153,9 +146,9 @@ export default new Vuex.Store({
       await batch.commit();
 
     },
-    getDocumentID(state,email){
+    async getDocumentID(state,email){
       //対象のドキュメントID取得
-      return new Promise((resolve) => {
+      return await new Promise((resolve) => {
         firebase.firestore().collection('wallet').where('email','==',email).get()
           .then(snapshot => {
             snapshot.forEach((postDoc) => {
