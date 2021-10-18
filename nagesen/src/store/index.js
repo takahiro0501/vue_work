@@ -147,17 +147,18 @@ export default new Vuex.Store({
 
     },
     async getDocumentID(state,email){
+
+      let docID;
+
       //対象のドキュメントID取得
-      return await new Promise((resolve) => {
-        firebase.firestore().collection('wallet').where('email','==',email).get()
+      await firebase.firestore().collection('wallet').where('email','==',email).get()
           .then(snapshot => {
             snapshot.forEach((postDoc) => {
-              resolve(postDoc.id);
+              docID = postDoc.id;
+            })
           })
-        })
-      })
-     }
-
+      return docID;
+    }
   },
   modules: {
   }
